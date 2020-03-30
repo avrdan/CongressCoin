@@ -70,38 +70,38 @@ Run **CongressCoin** or **CongressCoin.exe**
 
 ...
 
-Block =================
-Index: 1930
-Hash: 16607105036473875798
-Amount: 9397.02
-Sender: RepublicanMiner
-Receiver: CongressCoin
-Timestamp: 1585603536
-Previous Hash: 7144287885497096975
-Block Valid? 1
+Block =================<br>
+Index: 1930<br>
+Hash: 16607105036473875798<br>
+Amount: 9397.02<br>
+Sender: RepublicanMiner<br>
+Receiver: CongressCoin<br>
+Timestamp: 1585603536<br>
+Previous Hash: 7144287885497096975<br>
+Block Valid? 1<br>
 
-Block =================
-Index: 1931
-Hash: 15265414603722926998
-Amount: 14424
-Sender: LibertarianMiner
-Receiver: CongressCoin
-Timestamp: 1585603536
-Previous Hash: 16607105036473875798
-Block Valid? 1
+Block =================<br>
+Index: 1931<br>
+Hash: 15265414603722926998<br>
+Amount: 14424<br>
+Sender: LibertarianMiner<br>
+Receiver: CongressCoin<br>
+Timestamp: 1585603536<br>
+Previous Hash: 16607105036473875798<br>
+Block Valid? 1<br>
 
-Block =================
-Index: 1932
-Hash: 17792309275297261657
-Amount: 16064.7
-Sender: LibertarianMiner
-Receiver: CongressCoin
-Timestamp: 1585603536
-Previous Hash: 15265414603722926998
-Block Valid? 1
-
-=== SENDER SUMMARY ===
-
-Sender/Miner: DemocratMiner has sent/produced: 95 blocks.
-Sender/Miner: LibertarianMiner has sent/produced: 1610 blocks.
-Sender/Miner: RepublicanMiner has sent/produced: 225 blocks.
+Block =================<br>
+Index: 1932<br>
+Hash: 17792309275297261657<br>
+Amount: 16064.7<br>
+Sender: LibertarianMiner<br>
+Receiver: CongressCoin<br>
+Timestamp: 1585603536<br>
+Previous Hash: 15265414603722926998<br>
+Block Valid? 1<br>
+<br>
+=== SENDER SUMMARY ===<br>
+<br>
+Sender/Miner: DemocratMiner has sent/produced: 95 blocks.<br>
+Sender/Miner: LibertarianMiner has sent/produced: 1610 blocks.<br>
+Sender/Miner: RepublicanMiner has sent/produced: 225 blocks.<br>
