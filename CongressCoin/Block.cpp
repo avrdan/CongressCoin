@@ -10,7 +10,7 @@ Block::Block(int idx, const TransactionData& d, size_t prevHash)
 
 Block::Block(Block&& source)
 {
-    std::cout << "Move constructor - BLOCK " << std::endl;
+    //std::cout << "Move constructor - BLOCK " << std::endl;
     this->m_blockHash = source.m_blockHash;
     this->m_data = source.m_data;
     this->m_index = source.m_index;

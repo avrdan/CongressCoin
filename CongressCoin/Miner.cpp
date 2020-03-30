@@ -1,10 +1,12 @@
 #include "Miner.h"
+#include "Blockchain.h"
 
-Miner::Miner(size_t difficulty, size_t nodes, const std::string& name, const std::string& blockchainName)
-    : m_nrNodes(nodes)
-    , m_difficulty(difficulty)
+MessageQueue<TransactionData> Miner::s_queue;
+
+Miner::Miner(Blockchain* chain, size_t nodes, const std::string& name)
+    : m_chain(chain)
+    , m_nrNodes(nodes)
     , m_name(name)
-    , m_blockchainName(blockchainName)
 {
 }
 
@@ -19,20 +21,33 @@ void Miner::simulate()
     {
         m_nodes.emplace_back(std::thread(&Miner::doWork, this));
     }
+
+    m_minerThread = std::thread(&Miner::waitForData, this);
 }
 
-TransactionData Miner::waitForData()
+void Miner::waitForData()
 {
-    return m_queue.receive();
+    while (!m_isDone)
+    {
+        TransactionData data = s_queue.receive();
+        if (data.isValid())
+        {
+            m_chain->addBlock(data);
+        }
+        else
+        {
+            std::cout << "Invalid block.." << std::endl;
+        }
+    }
 }
 
 void Miner::stop()
 {
     m_isDone = true;
     // send empty message which returns it from receive and terminates the call, thus closing queue after it becomes empty
-    m_queue.send({});
-    while (!m_queue.isEmpty());
-
+    s_queue.send({});
+    while (!s_queue.isEmpty());
+    m_minerThread.join();
     // queue closed, safe to destroy after all mining threads are finished
     for (auto& node : m_nodes)
     {
@@ -49,15 +64,15 @@ void Miner::doWork()
 
         // when threshold reached, add block to blockchain
         std::lock_guard<std::mutex> lock(m_mtx);
-        if (m_workJobsDone >= std::pow(2, m_difficulty))
+        size_t difficulty = m_chain->getSize();
+        if (m_workJobsDone >= difficulty)// std::pow(2, difficulty))
         {
             // send transaction data that will be used to create a block
-            double amount = (double)rand() / RAND_MAX * AMOUNT_FACTOR * m_difficulty;
+            double amount = (double)rand() / RAND_MAX * AMOUNT_FACTOR * difficulty;
             std::string keySender = m_name;
-            std::string keyReceiver = m_blockchainName;
-            m_queue.send({ amount, keySender, keyReceiver, time(nullptr) });
+            std::string keyReceiver = m_chain->getName();
+            s_queue.send({ amount, keySender, keyReceiver, time(nullptr) });
             m_workJobsDone = 0;
-            ++m_difficulty;
         }
     }
 }

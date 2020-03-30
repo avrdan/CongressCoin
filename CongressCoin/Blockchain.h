@@ -4,14 +4,18 @@
 #include <memory>
 #include "TransactionData.h"
 #include "Block.h"
-#include "Miner.h"
+#include <thread>
+#include <mutex>
+#include <map>
+
+class Miner;
 
 // Blockchain - will contain all blocks
 class Blockchain
 {
 public:
     Blockchain(const std::string& name);
-    ~Blockchain() = default;
+    ~Blockchain();
 
     void addBlock(const TransactionData& data);
     bool isChainValid() const;
@@ -20,6 +24,7 @@ public:
     void doMining();
     void stopMining(size_t timeoutMs = 0);
     size_t getSize() const;
+    std::string getName() const;
 
     // dangerous! allows direct memory access, but used to showcase
     // what would happen in case a block was actually hacked
@@ -29,7 +34,9 @@ private:
 
     std::vector<Block> m_chain;
     std::string m_name;
-    std::vector<std::unique_ptr<Miner>> m_miners;
     std::thread m_miningThread;
-    std::mutex m_mtx;
+    std::mutex m_mtxMiners;
+    std::vector<std::unique_ptr<Miner>> m_miners;
+    mutable std::mutex m_mtxChain;
+    std::map<std::string, size_t> m_senderBlocks;
 };

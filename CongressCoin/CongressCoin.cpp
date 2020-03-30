@@ -6,6 +6,7 @@
 #include <random>
 #include "CongressCoin.h"
 #include "Blockchain.h"
+#include "Miner.h"
 
 const std::string bcName = "CongressCoin";
 
@@ -17,30 +18,35 @@ int main()
     // seed the random generator
     std::srand(static_cast<unsigned int>(time(nullptr)));
 
-    Blockchain congressCoin(bcName);
+    Blockchain fakeCoin("FakeCoin");
 
-    congressCoin.addBlock({1.5, "Jack", "Sara", time(nullptr)});
-    congressCoin.addBlock({ 0.00013322, "Maria", "Frank", time(nullptr) });
+    fakeCoin.addBlock({7.5, "Jack", "Sara", time(nullptr)});
+    fakeCoin.addBlock({ 0.07653124, "Maria", "Frank", time(nullptr) });
 
-    std::cout << "Is chain valid? " << congressCoin.isChainValid() << std::endl;
+    std::cout << "Is chain valid? " << fakeCoin.isChainValid() << std::endl;
 
     // :)
-    Block* hackBlock = congressCoin.getLatestBlock();
+    Block* hackBlock = fakeCoin.getLatestBlock();
     char* p = reinterpret_cast<char*>(hackBlock);
     p += 3 * sizeof(size_t);
     TransactionData* data = (reinterpret_cast<TransactionData*>(p));
-    data->amount = 10000;
+    data->amount = 12345;
 
-    std::cout << "Is chain STILL valid? " << congressCoin.isChainValid() << std::endl;
+    std::cout << "Is chain STILL valid? " << fakeCoin.isChainValid() << std::endl;
 
-    congressCoin.printChain();
+    fakeCoin.printChain();
 
-    data->amount = 0.00013322; // make the block valid again
+    data->amount = 0.07653124; // make the block valid again
+
+    Blockchain congressCoin(bcName);
+    char c;
+    std::cout << "\n\nPLEASE PRESS A KEY AND CONFIRM WITH ENTER (RETURN) IN ORDER TO START THE CONGRESS COIN GENERATOR\n\n";
+    std::cin >> c;
 
     std::vector<std::unique_ptr<Miner>> miners;
-    std::unique_ptr<Miner> minerR = std::make_unique<Miner>(congressCoin.getSize(), 7, "RepublicanMiner", bcName);
-    std::unique_ptr<Miner> minerD = std::make_unique<Miner>(congressCoin.getSize(), 3, "DemocratMiner", bcName);
-    std::unique_ptr<Miner> minerL = std::make_unique<Miner>(congressCoin.getSize(), 50, "LibertarianMiner", bcName);
+    std::unique_ptr<Miner> minerR = std::make_unique<Miner>(&congressCoin, 7, "RepublicanMiner");
+    std::unique_ptr<Miner> minerD = std::make_unique<Miner>(&congressCoin, 3, "DemocratMiner");
+    std::unique_ptr<Miner> minerL = std::make_unique<Miner>(&congressCoin, 50, "LibertarianMiner");
     miners.emplace_back(std::move(minerR));
     miners.emplace_back(std::move(minerD));
     miners.emplace_back(std::move(minerL));
